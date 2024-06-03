@@ -33,7 +33,7 @@ public class MiniController {
      *  ░ ░    ░░░ ░ ░ ░        ░ ░░ ░
      *           ░     ░ ░      ░  ░
 
-     * @param path
+     * @param path :例:C:\ c C c:之类都可以
      * @return
      */
     @PostMapping("/getServerStatus")
@@ -53,7 +53,7 @@ public class MiniController {
         BigDecimal usedDiskSize = new BigDecimal("0.0");
         File[] roots = File.listRoots();
         for (File root:roots){
-            if (root.getPath().equals(path)){
+            if (dealPath(root.getPath()).equals(dealPath(path))){
                 totalDiskSize=new BigDecimal(root.getTotalSpace()/1024.0/1024.0/1024.0).setScale(2,2);
                 usedDiskSize=new BigDecimal((root.getTotalSpace()-root.getFreeSpace())/1024.0/1024.0/1024.0).setScale(2,2);
             }
@@ -69,7 +69,18 @@ public class MiniController {
         return JSONObject.toJSONString(miniInfo);
     }
 
-
+    /**
+     * 处理path,将符号和斜线都去掉.只留盘符字母并转换成小写
+     * @param path
+     * @return
+     */
+    private String dealPath(String path){
+        return path
+                .replace(":\\","")
+                .replace(":","")
+                .replace("\\","")
+                .toLowerCase();
+    }
 }
 class MiniInfo{
 
